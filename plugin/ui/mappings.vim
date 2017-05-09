@@ -47,6 +47,16 @@ if &term =~ "xterm"
   call s:MapNVOIC("<Esc>[1;2Z", "<S-Tab>")
   call s:MapNVOIC("<Esc>[1;6Z", "<C-S-Tab>")
   call s:MapNVOIC("<Esc>[1;6Y", "<C-S-Bslash>")
+
+  " Terminal (~/Documents/Development/TerminalKeys.terminal)
+  call s:MapNVOIC("<Esc>[1;25~", "<S-PageUp>")
+  call s:MapNVOIC("<Esc>[1;35~", "<A-PageUp>")
+  call s:MapNVOIC("<Esc>[1;55~", "<C-PageUp>")
+  call s:MapNVOIC("<Esc>[1;65~", "<C-S-PageUp>")
+  call s:MapNVOIC("<Esc>[1;26~", "<S-PageDown>")
+  call s:MapNVOIC("<Esc>[1;36~", "<A-PageDown>")
+  call s:MapNVOIC("<Esc>[1;56~", "<C-PageDown>")
+  call s:MapNVOIC("<Esc>[1;66~", "<C-S-PageDown>")
 endif
 
 map Q <Nop>
@@ -92,8 +102,8 @@ call s:NoRemapNVOI("<silent> <PageUp>", "", "<Esc>", "<Esc>", "<C-O>", "<C-U>")
 call s:NoRemapNVOI("<silent> <PageDown>", "", "<Esc>", "<Esc>", "<C-O>", "<C-D>")
 call s:NoRemapNVOI("<silent> <S-PageUp>", "v", "", "<Esc>v", "<C-O>v", "<C-U>")
 call s:NoRemapNVOI("<silent> <S-PageDown>", "v", "", "<Esc>v", "<C-O>v", "<C-D>")
-call s:NoRemapNVOI("<silent> <A-PageUp>", "", "<Esc>", "<Esc>", "<C-O>", ":tabmove <C-R>=max([tabpagenr() - 2, 0])<CR><CR>")
-call s:NoRemapNVOI("<silent> <A-PageDown>", "", "<Esc>", "<Esc>", "<C-O>", ":tabmove <C-R>=tabpagenr()<CR><CR>")
+call s:NoRemapNVOI("<silent> <C-S-PageUp>", "", "<Esc>", "<Esc>", "<C-O>", ":tabmove <C-R>=max([tabpagenr() - 2, 0])<CR><CR>")
+call s:NoRemapNVOI("<silent> <C-S-PageDown>", "", "<Esc>", "<Esc>", "<C-O>", ":tabmove <C-R>=tabpagenr() + 1<CR><CR>")
 call s:NoRemapNVOI("<silent> <C-A>", "<Esc>gg0v", "gg0o", "<Esc>gg0v", "<C-O>gg<C-O>0<C-O>v", "G$")
 call s:NoRemapNVOI("<silent> <C-B>", "", "", "<Esc>", "<C-O>", "%")
 call s:NoRemapNVOI("<silent> <C-C>", "\"+y<Right>", "\"+y", "<Esc>\"+y<Right>", "<C-O>\"+y<Right>", "")
