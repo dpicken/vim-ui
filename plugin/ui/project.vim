@@ -8,6 +8,7 @@ function s:GetProjectPathHelper(buffer_path, project_container_path)
 endfunction
 
 let g:ui_project_container_paths = []
+let g:ui_project_tags_filename = "tags"
 
 function s:GetProjectPathImpl(buffer_path)
   for project_container_path in g:ui_project_container_paths
@@ -29,7 +30,7 @@ function s:SetProject(buffer_path)
   endif
 
   execute "setlocal tags<"
-  execute "setlocal tags+=" . MakePath(project_path, "tags")
+  execute "setlocal tags+=" . MakePath(project_path, g:ui_project_tags_filename)
 
   execute "setlocal path<"
   execute "setlocal path+=" . project_path
@@ -41,6 +42,10 @@ function s:SetProject(buffer_path)
   for path in g:ui_project_absolute_file_search_paths
     execute "setlocal path+=" . path
   endfor
+
+  if exists("*SetLocationSpecificProjectOptions")
+    call SetLocationSpecificProjectOptions()
+  endif
 endfunction
 
 let g:ui_project_dirnames_excluded_from_guard = []
