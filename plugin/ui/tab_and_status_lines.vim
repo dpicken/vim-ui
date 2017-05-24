@@ -141,4 +141,4 @@ set tabline=%!GetTabLine()
 " Status line for the current buffer:
 "   - lhs: full path and modified/modifiable indication.
 "   - rhs: [character encoding|line ending] + line,column + % through file.
-set statusline=%F%1.1(%{GetBufferModifiedChar()}%)\ %=[%{GetBufferEncoding()}\|%{&fileformat}]\ %(%3.5l,%-3.4c%)\ %P
+set statusline=%F%1.1(%{GetBufferModifiedChar()}%)\ %=[%{GetBufferEncoding()}\|%{&fileformat}]\ %(%3.5l,%-3.4v%)\ %P
