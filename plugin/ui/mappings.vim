@@ -48,6 +48,13 @@ if &term =~ "xterm"
   call s:MapNVOIC("<Esc>[1;6Z", "<C-S-Tab>")
   call s:MapNVOIC("<Esc>[1;6Y", "<C-S-Bslash>")
 
+  " Terminal
+  call s:MapNVOIC("<Esc>[25~", "<S-F5>")
+  call s:MapNVOIC("<Esc>[26~", "<S-F6>")
+  call s:MapNVOIC("<Esc>[28~", "<S-F7>")
+  call s:MapNVOIC("<Esc>[29~", "<S-F8>")
+  call s:MapNVOIC("<Esc>[31~", "<S-F9>")
+
   " Terminal (~/Documents/Development/TerminalKeys.terminal)
   call s:MapNVOIC("<Esc>[1;25~", "<S-PageUp>")
   call s:MapNVOIC("<Esc>[1;35~", "<A-PageUp>")
@@ -98,6 +105,7 @@ call s:NoRemapNVOI("<silent> <F6>", "", "", "", "", ":<Esc>:" . g:ui_mappings_ma
 call s:NoRemapNVOI("<silent> <F7>", "", "<Esc>", "<Esc>", "<C-O>", ":call ToggleLocalOption(\"spell\")<CR>")
 call s:NoRemapNVOI("<silent> <F8>", "", "<Esc>", "<Esc>", "<C-O>", ":call StripTrailingWhiteSpace()<CR>")
 call s:NoRemapNVOI("<silent> <F9>", "", "<Esc>", "<Esc>", "<C-O>", ":call InsertCHeaderBoilerPlate()<CR>")
+call s:NoRemapNVOI("<silent> <S-F9>", "", "<Esc>", "<Esc>", "<C-O>", ":call InsertCCopyrightStatement()<CR>")
 call s:NoRemapNVOI("<silent> <PageUp>", "", "<Esc>", "<Esc>", "<C-O>", "<C-U>")
 call s:NoRemapNVOI("<silent> <PageDown>", "", "<Esc>", "<Esc>", "<C-O>", "<C-D>")
 call s:NoRemapNVOI("<silent> <S-PageUp>", "v", "", "<Esc>v", "<C-O>v", "<C-U>")
