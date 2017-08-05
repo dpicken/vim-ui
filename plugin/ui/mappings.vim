@@ -78,6 +78,7 @@ noremap <silent> + <Esc>:<C-R>=winheight(0) * 2<CR> wincmd _<CR>
 noremap <silent> - <Esc>:<C-R>=winheight(0) / 2<CR> wincmd _<CR>
 noremap <silent> | <Esc>:<C-R>=winwidth(0) + 2<CR> wincmd |<CR>
 noremap <silent> <C-S-Bslash> <Esc>:<C-R>=winwidth(0) - 2<CR> wincmd |<CR>
+noremap <silent> \| <C-W>L
 
 vnoremap <silent> p "_dp
 vnoremap <silent> P "_dP
