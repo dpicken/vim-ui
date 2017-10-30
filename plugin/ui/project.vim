@@ -8,7 +8,6 @@ function s:GetProjectPathHelper(buffer_path, project_container_path)
 endfunction
 
 let g:ui_project_container_paths = []
-let g:ui_project_tags_filename = "tags"
 
 function s:GetProjectPathImpl(buffer_path)
   for project_container_path in g:ui_project_container_paths
@@ -20,6 +19,7 @@ function s:GetProjectPathImpl(buffer_path)
   return ""
 endfunction
 
+let g:ui_project_tags_filename = ".tags"
 let g:ui_project_relative_file_search_paths = []
 let g:ui_project_absolute_file_search_paths = []
 
@@ -117,7 +117,7 @@ function s:InsertCHeaderBoilerPlateImpl()
   endif
 endfunction
 
-function s:GetCurrrentPathOrDirectory()
+function s:GetCurrentPathOrDirectory()
   let path = expand("%:p")
   if path == ""
     let path = getcwd()
@@ -130,7 +130,7 @@ endfunction
 " API
 
 function GetProjectPathUsingCurrentPathOrDirectory()
-  return s:GetProjectPathImpl(s:GetCurrrentPathOrDirectory())
+  return s:GetProjectPathImpl(s:GetCurrentPathOrDirectory())
 endfunction
 
 function InsertCHeaderBoilerPlate()
@@ -142,15 +142,42 @@ endfunction
 " Runtime
 
 function s:SetProjectUsingCurrentFileOrDirectory()
-  call s:SetProject(s:GetCurrrentPathOrDirectory())
+  call s:SetProject(s:GetCurrentPathOrDirectory())
+endfunction
+
+function GetSubProjectPathUsingCurrentFileOrDirectory(makefile)
+  let project_path = GetProjectPathUsingCurrentPathOrDirectory()
+  let current_path = s:GetCurrentPathOrDirectory()
+  while project_path != "" && current_path =~ project_path
+    if filereadable(MakePath(current_path, a:makefile))
+      return current_path
+    endif
+    let current_path = fnamemodify(current_path, ":h")
+  endwhile
+  return project_path
+endfunction
+
+function s:SetProjectOptions()
+  call s:SetProjectUsingCurrentFileOrDirectory()
+
+  let makefile = GetProjectPathUsingCurrentPathOrDirectory() . GetPathSeparator() . "Makefile"
+  let pom = GetProjectPathUsingCurrentPathOrDirectory() . GetPathSeparator() . "pom.xml"
+  if filereadable(makefile)
+    let &l:makeprg = "make --no-print-directory -C " . GetSubProjectPathUsingCurrentFileOrDirectory("Makefile")
+  elseif filereadable(pom)
+    let &l:makeprg = "cd " . GetSubProjectPathUsingCurrentFileOrDirectory("pom.xml") . " && mvn --quiet compile"
+    let &l:errorformat = "%E[ERROR] %f:[%l] ,%C[ERROR] %m,%-C%p^,%+Z[ERROR] %m"
+      \ . ",[ERROR] %f:[%l] %m"
+      \ . ",[ERROR] %f:[%l\\,%c] %m"
+  endif
 endfunction
 
 if has("autocmd")
   augroup ui_project
     autocmd!
-    autocmd BufNewFile  * call s:SetProjectUsingCurrentFileOrDirectory()
-    autocmd BufFilePost * call s:SetProjectUsingCurrentFileOrDirectory()
-    autocmd BufEnter    * call s:SetProjectUsingCurrentFileOrDirectory()
-    autocmd VimEnter    * call s:SetProjectUsingCurrentFileOrDirectory()
+    autocmd BufNewFile  * call s:SetProjectOptions()
+    autocmd BufFilePost * call s:SetProjectOptions()
+    autocmd BufEnter    * call s:SetProjectOptions()
+    autocmd VimEnter    * call s:SetProjectOptions()
   augroup END
 endif

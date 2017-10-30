@@ -18,9 +18,25 @@ function s:CheckedStripTrailingWhiteSpace()
   endif
 endfunction
 
+function s:SetHardTabs()
+  setlocal expandtab!
+  setlocal shiftwidth=4
+  setlocal softtabstop=4
+  setlocal tabstop=4
+endfunction
+
+function s:SetJavaBufferOptions()
+  setlocal expandtab
+  setlocal shiftwidth=4
+  setlocal softtabstop=4
+  setlocal tabstop=4
+endfunction
+
 if has("autocmd")
   augroup ui_buf
     autocmd!
+    autocmd BufEnter Makefile,*.go,*.mk call s:SetHardTabs()
+    autocmd BufEnter *.java call s:SetJavaBufferOptions()
     autocmd BufWritePre * call s:CheckedStripTrailingWhiteSpace()
   augroup END
 endif
