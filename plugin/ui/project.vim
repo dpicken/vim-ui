@@ -117,6 +117,27 @@ function s:InsertCHeaderBoilerPlateImpl()
   endif
 endfunction
 
+function s:InsertJavaBoilerPlateImpl()
+  let buffer_path = expand("%:p")
+
+  if fnamemodify(buffer_path, ":t") == ""
+    return
+  endif
+
+  let project_path = s:GetProjectPathImpl(buffer_path)
+  let project_path_pattern = '^' . project_path . GetPathSeparator()
+  let buffer_path_leaf = substitute(buffer_path, project_path_pattern, "", "")
+
+  let package = fnamemodify(buffer_path_leaf, ":h")
+  let package = substitute(package, GetPathSeparator(), ".", "g")
+  let package = substitute(package, ".*\.java\.", "", "")
+  let class = fnamemodify(buffer_path, ":t:r")
+
+  call append(0, "package " . package . ";")
+  call append(line("$"), "public class " . class . " {")
+  call append(line("$"), "}")
+endfunction
+
 function s:GetCurrentPathOrDirectory()
   let path = expand("%:p")
   if path == ""
@@ -133,8 +154,13 @@ function GetProjectPathUsingCurrentPathOrDirectory()
   return s:GetProjectPathImpl(s:GetCurrentPathOrDirectory())
 endfunction
 
-function InsertCHeaderBoilerPlate()
-  call s:InsertCHeaderBoilerPlateImpl()
+function InsertBoilerPlate()
+  let extension = expand("%:p:e:e")
+  if extension == "h"
+    call s:InsertCHeaderBoilerPlateImpl()
+  elseif extension == "java"
+    call s:InsertJavaBoilerPlateImpl()
+  endif
 endfunction
 
 
