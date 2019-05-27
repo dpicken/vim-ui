@@ -156,7 +156,7 @@ endfunction
 
 function InsertBoilerPlate()
   let extension = expand("%:p:e:e")
-  if extension == "h"
+  if extension == "h" || extension == "fwd.h"
     call s:InsertCHeaderBoilerPlateImpl()
   elseif extension == "java"
     call s:InsertJavaBoilerPlateImpl()
