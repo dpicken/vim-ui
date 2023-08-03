@@ -187,9 +187,12 @@ function s:SetProjectOptions()
   call s:SetProjectUsingCurrentFileOrDirectory()
 
   let makefile = GetProjectPathUsingCurrentPathOrDirectory() . GetPathSeparator() . "Makefile"
+  let build = GetProjectPathUsingCurrentPathOrDirectory() . GetPathSeparator() . "BUILD"
   let pom = GetProjectPathUsingCurrentPathOrDirectory() . GetPathSeparator() . "pom.xml"
   if filereadable(makefile)
     let &l:makeprg = "make --no-print-directory -C " . GetSubProjectPathUsingCurrentFileOrDirectory("Makefile")
+  elseif filereadable(build)
+    let &l:makeprg = "cd " . fnamemodify(build, ":h") . " && bazel build //..."
   elseif filereadable(pom)
     let &l:makeprg = "cd " . GetSubProjectPathUsingCurrentFileOrDirectory("pom.xml") . " && mvn --quiet compile"
     let &l:errorformat = "%E[ERROR] %f:[%l] ,%C[ERROR] %m,%-C%p^,%+Z[ERROR] %m"
