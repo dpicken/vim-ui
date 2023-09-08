@@ -51,6 +51,37 @@ endfunction
 let g:ui_project_dirnames_excluded_from_guard = []
 let g:ui_project_dirnames_excluded_from_namespace = []
 
+function s:InsertCHeaderBoilerPlateSimple()
+  let buffer_path = expand("%:p")
+
+  if fnamemodify(buffer_path, ":t") == ""
+    return
+  endif
+
+  let project_path = s:GetProjectPathImpl(buffer_path)
+
+  let invalid_token_chars_pattern = '[. :-]'
+  let namespace = substitute(fnamemodify(project_path, ":t"), invalid_token_chars_pattern, "", "g")
+
+  if namespace != ""
+    call append(0, "")
+    call append(0, "namespace " . namespace . " {")
+  endif
+
+  let buffer_path_extension = fnamemodify(buffer_path, ":e:e")
+  let add_c_include_guard = (buffer_path_extension == "h" || buffer_path_extension == "fwd.h" || buffer_path_extension == "inl.h")
+
+  if add_c_include_guard
+    call append(0, "")
+    call append(0, "#pragma once")
+  endif
+
+  if namespace != ""
+    call append(line("$"), "")
+    call append(line("$"), "} // namespace " . namespace)
+  endif
+endfunction
+
 function s:InsertCHeaderBoilerPlateImpl()
   let buffer_path = expand("%:p")
 
@@ -154,10 +185,16 @@ function GetProjectPathUsingCurrentPathOrDirectory()
   return s:GetProjectPathImpl(s:GetCurrentPathOrDirectory())
 endfunction
 
+let g:ui_project_c_header_boiler_plate = get(g:, 'ui_project_c_header_boiler_plate', "default")
+
 function InsertBoilerPlate()
   let extension = expand("%:p:e:e")
   if extension == "h" || extension == "fwd.h"
-    call s:InsertCHeaderBoilerPlateImpl()
+    if g:ui_project_c_header_boiler_plate == "simple"
+      call s:InsertCHeaderBoilerPlateSimple()
+    else
+      call s:InsertCHeaderBoilerPlateImpl()
+    endif
   elseif extension == "java"
     call s:InsertJavaBoilerPlateImpl()
   endif
