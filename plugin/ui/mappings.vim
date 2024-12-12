@@ -42,6 +42,12 @@ if &term =~ "xterm"
   set <F3>=[1;*R
   set <F4>=[1;*S
 
+  " Linux
+  call s:MapNVOIC("<Esc>OP", "<F1>")
+  call s:MapNVOIC("<Esc>OQ", "<F2>")
+  call s:MapNVOIC("<Esc>OR", "<F3>")
+  call s:MapNVOIC("<Esc>OS", "<F4>")
+
   " XTerm (~/.Xresources)
   call s:MapNVOIC("<Esc>[1;5Z", "<C-Tab>")
   call s:MapNVOIC("<Esc>[1;2Z", "<S-Tab>")
